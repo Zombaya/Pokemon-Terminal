@@ -4,7 +4,7 @@
 
 from sys import argv
 from database import Database
-import scripter
+from scripter import Scripter
 import sys
 import time
 
@@ -88,7 +88,7 @@ Other Parameters:
 ''')
 
 
-def slideshow(db, start, end):
+def slideshow(db, start, end,scripter):
     # Show each Pokemon in order, one by one.
     try:
         for x in range(start, end):
@@ -100,7 +100,7 @@ def slideshow(db, start, end):
         sys.exit()
 
 
-def change_terminal_background(db, arg):
+def change_terminal_background(db, arg, scripter):
     # Change the terminal background to the specified Pokemon, if it exists.
     if arg in db:
         pokemon = db.get_pokemon(arg)
@@ -120,7 +120,7 @@ def change_terminal_background(db, arg):
             scripter.change_terminal(suggestions[0])
 
 
-def change_wallpaper(db, arg):
+def change_wallpaper(db, arg, scripter):
     # Change the wallpaper to the specified Pokemon, if it exists.
     if arg in db:
         pokemon = db.get_pokemon(arg)
@@ -145,6 +145,9 @@ def single_argument_handler(arg):
     # Handle the logic for when there is only one command line parameter inputted.
     db = Database()
 
+    # Get the scripter
+    scripter = Scripter()
+
     # If there is an escape code, then change the wallpaper, not the terminal.
     if str(arg).startswith("_"):
         escape_code = True
@@ -153,7 +156,7 @@ def single_argument_handler(arg):
         escape_code = False
 
     if len(arg) < 3 and arg.isalpha():
-        prefix_search(db, arg)
+        prefix_search(db, arg, scripter)
     elif arg == "extra":
         print_extra(db)
     elif arg == "regions":
@@ -173,43 +176,43 @@ def single_argument_handler(arg):
     elif arg == "clear":
         scripter.clear_terminal()
     elif arg == "random" and escape_code:
-        change_wallpaper(db, db.get_random().get_name())
+        change_wallpaper(db, db.get_random().get_name(), scripter)
     elif arg == "random-kanto" and escape_code:
-        change_wallpaper(db, db.get_random_from_region("kanto").get_name())
+        change_wallpaper(db, db.get_random_from_region("kanto").get_name(), scripter)
     elif arg == "random-johto" and escape_code:
-        change_wallpaper(db, db.get_random_from_region("johto").get_name())
+        change_wallpaper(db, db.get_random_from_region("johto").get_name(), scripter)
     elif arg == "random-hoenn" and escape_code:
-        change_wallpaper(db, db.get_random_from_region("hoenn").get_name())
+        change_wallpaper(db, db.get_random_from_region("hoenn").get_name(), scripter)
     elif arg == "random-sinnoh" and escape_code:
-        change_wallpaper(db, db.get_random_from_region("sinnoh").get_name())
+        change_wallpaper(db, db.get_random_from_region("sinnoh").get_name(), scripter)
     elif arg == "random":
-        change_terminal_background(db, db.get_random().get_name())
+        change_terminal_background(db, db.get_random().get_name(), scripter)
     elif arg == "random-kanto":
-        change_terminal_background(db, db.get_random_from_region("kanto").get_name())
+        change_terminal_background(db, db.get_random_from_region("kanto").get_name(), scripter)
     elif arg == "random-johto":
-        change_terminal_background(db, db.get_random_from_region("johto").get_name())
+        change_terminal_background(db, db.get_random_from_region("johto").get_name(), scripter)
     elif arg == "random-hoenn":
-        change_terminal_background(db, db.get_random_from_region("hoenn").get_name())
+        change_terminal_background(db, db.get_random_from_region("hoenn").get_name(), scripter)
     elif arg == "random-sinnoh":
-        change_terminal_background(db, db.get_random_from_region("sinnoh").get_name())
+        change_terminal_background(db, db.get_random_from_region("sinnoh").get_name(), scripter)
     elif arg == "slideshow":
-        slideshow(db, 1, 494)
+        slideshow(db, 1, 494,scripter)
     elif arg == "slideshow-kanto":
-        slideshow(db, 1, 152)
+        slideshow(db, 1, 152,scripter)
     elif arg == "slideshow-johto":
-        slideshow(db, 152, 252)
+        slideshow(db, 152, 252,scripter)
     elif arg == "slideshow-hoenn":
-        slideshow(db, 252, 387)
+        slideshow(db, 252, 387,scripter)
     elif arg == "slideshow-sinnoh":
-        slideshow(db, 387, 494)
+        slideshow(db, 387, 494,scripter)
     elif arg == "?" and escape_code:
         scripter.determine_wallpaper_pokemon(db)
     elif arg == "?":
         scripter.determine_terminal_pokemon(db)
     elif escape_code:
-        change_wallpaper(db, arg)
+        change_wallpaper(db, arg, scripter)
     else:
-        change_terminal_background(db, arg)
+        change_terminal_background(db, arg, scripter)
 
 
 if __name__ == "__main__":
